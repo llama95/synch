@@ -32,28 +32,33 @@ public class ImageService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private KafkaProducer kafkaProducer;
+
     public ResponseEntity uploadImage(String filePath, String title, String description) {
 
         try {
             User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
             File file = new File("src/main/resources/static/uploads/" + filePath);
-            // Make sure the file and user are present
+
             if (!file.exists() && user != null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File not found at: " + file.getAbsolutePath());
             }
-            // Prepare image upload
+
             byte[] fileContent = Files.readAllBytes(file.toPath());
             String encodedFile = Base64.getEncoder().encodeToString(fileContent);
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("Authorization", "Client-ID " + imgurClientId);
+
             Map<String, String> body = Map.of("image", encodedFile, "title", title, "description", description);
             HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(body, headers);
             RestTemplate restTemplate = new RestTemplate();
+
             ResponseEntity<Map> response = restTemplate.exchange(IMGUR_API_URL, HttpMethod.POST, requestEntity, Map.class);
 
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                // Save the image to our db if it is uploaded 2xx
                 Map<String, Object> data = (Map<String, Object>) response.getBody().get("data");
                 String imgurId = (String) data.get("id");
                 String link = (String) data.get("link");
@@ -67,12 +72,16 @@ public class ImageService {
 
                 imageRepository.save(image);
 
+                // Produce Kafka Event
+                kafkaProducer.sendImageUploadEvent(user.getUsername(), title);
+
                 return ResponseEntity.ok("Image uploaded successfully. Link: " + link);
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading image: " + e.getMessage());
         }
         return null;
+
     }
 
     public ResponseEntity viewImageByDbId(Long id) {
