@@ -1,0 +1,203 @@
+{
+	"info": {
+		"_postman_id": "6a60431d-fe18-49f0-a7a5-32de3ee529a2",
+		"name": "Synch",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"john_doe\",\n    \"password\": \"password123\"\n    \n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Image",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "john_doe",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "password123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "filePath",
+							"value": "1.jpg",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "Example Image #1",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "This is an example upload #1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/images/upload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"images",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View Image",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "john_doe",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "password123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/images/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"images",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Image",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "john_doe",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "password123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/images/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"images",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User's Images",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "password123",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "john_doe",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/images/user-images",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"images",
+						"user-images"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
